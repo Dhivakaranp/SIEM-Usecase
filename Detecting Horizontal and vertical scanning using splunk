@@ -1,0 +1,23 @@
+Purpose: To detect scan towards internal network
+Platform : Splunk
+cron : [0 * * * *]
+Suggestion : integrating threatintel helps the Enhance Threat Detection & Improve Incident Response
+
+| from datamodel:Network_Traffic 
+| search dest_ip="10.0.0.0/8" OR dest_ip="172.16.0.0/11" OR dest_ip="192.168.0.0/16" # Any other IP needed to monitored
+| eval port_status=case(
+    (dest_port >= 0 AND dest_port <= 1023), "Assigned", 
+    dest_port == 3389, "MS-RDP", 
+    (dest_port >= 1024 AND dest_port <= 3388) OR (dest_port >= 3390 AND dest_port <= 65535),
+     "Unassigned",  1=1, "Unknown") 
+| stats count earliest(_time) as Firsttime latest(_time) as Lasttime dc(dest_ip) as dc_dest_ip dc(dest_port) as dc_dest_port 
+    values(action) as fw_actions count(eval(action=="allowed")) as allowed_count 
+    count(eval(action=="blocked")) as blocked_count values(app) as app values(rule) as rule
+    dc(eval(if(port_status=="Assigned", dest_port, null))) as Assigned_port_count 
+    dc(eval(if(port_status=="MS-RDP", dest_port, null))) as ms_rdp_port_count 
+    dc(eval(if(port_status=="Unassigned", dest_port, null))) as unassigned_port_count  
+    by src_ip  
+| eval Scan_Type = (case(dc_dest_port > dc_dest_ip, "Port_Scan", dc_dest_port < dc_dest_ip, "Host_Scan", (unassigned_port_count=0 AND Assigned_port_count=0 AND ms_rdp_port_count=1),"RDP_Scan")) 
+| where (dc_dest_ip > 100 OR (unassigned_port_count > 500 AND app!=incomplete)OR Assigned_port_count > 20 OR Scan_Type="RDP_Scan") AND (allowed_count > 0) 
+| convert ctime(Firsttime) ctime(Lasttime)
+
