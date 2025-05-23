@@ -1,0 +1,28 @@
+| from datamodel:Authentication.Authentication
+| search NOT src IN (10.0.0.0/24, -, unknown) // add it if any exclusion is needed
+| stats c as Auth_count earliest(_time) as ET latest(_time) as LT
+    dc(src) as src_count
+    values(src) as src_list
+    values(dest) as dest_list
+    by user
+| eval timediff=round((LT-ET)/3600)
+| where timediff < 15 AND src_count > 1
+| convert ctime(ET) ctime(LT)
+| eval Source = mvjoin(src_list, ", "), Dest =mvjoin(dest_list, ", "), Asset_in_risk="User account"
+| eval description= ("The ".user." is authenticated ".Auth_count." times from ".src_count." sources ".Source." within ".timediff." minutes to ".dest_list)
+| rename user as Asset
+| table Asset ET LT description Asset_in_risk
+| append 
+    [| from datamodel:Authentication.Authentication
+| search NOT src IN (10.0.0.0/24, -, unknown)
+| stats c as Auth_count earliest(_time) as ET latest(_time) as LT
+    dc(user) as user_count
+    values(user) as user_list
+    values(dest) as dest_list
+    by src
+| eval timediff=round((LT-ET)/3600)
+| where timediff < 15 AND user_count > 1
+| convert ctime(ET) ctime(LT)
+| eval Users = mvjoin(user_list, ", "), Dest =mvjoin(dest_list, ", "), description= ("The ".Users." are authenticated ".Auth_count." times from ".user_count." sources ".src." within ".timediff." minutes"), Asset_in_risk="Source host"
+    | rename src as Asset
+| table Asset ET LT description Asset_in_risk]
