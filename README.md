@@ -9,3 +9,6 @@ Below, you'll find a list of use cases that I personally built and tested in Spl
 ### Use Cases:
 
 * Basic scanning
+* Prototype Detecting RDP Brute-force
+* simultaneous access
+  
