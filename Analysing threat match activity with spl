@@ -1,0 +1,8 @@
+index="threat_activity" 
+| table  description	dest	dest_asset src threat_collection_key 	threat_match_field	threat_match_value	user
+|rename threat_match_value as src_ip
+| join type=left src_ip 
+    [search index=firewall 
+    | stats count values(dest_ip) as dests_ip values(rule) as rule  by src_ip action app src_interface transport dvc session_end_reason ]
+| stats count values(dest_ip) as dests_ip values(rule) as rule values(description) as description values(threat_collection_key) as threat_collection_key
+values(threat_match_value) as threat_match_value values(threat_match_field) as threat_match_field by src_ip action app src_interface transport dvc session_end_reason
