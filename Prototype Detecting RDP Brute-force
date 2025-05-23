@@ -1,0 +1,8 @@
+| tstats summariesonly=t allow_old_summaries=t count values("All_Traffic.action") from datamodel=Network_Traffic where All_Traffic.app="*rdp" AND All_Traffic.action= allowed 
+  by All_Traffic.src All_Traffic.dest All_Traffic.user All_Traffic.dvc All_Traffic.rule All_Traffic.dest_zone  
+| rename All_Traffic.src as IpAddress 
+| join type=left IpAddress
+    [search index IN (windows)   (EventID=4624 AND LogonType=10) OR (EventID=4625 AND LogonType=3)
+    | stats count as A_count  count(eval(action=="success")) as success count(eval(action=="failure")) as failure 
+      values(LogonType) values(dest_nt_host) values(user) as A_user by  IpAddress dest  ] 
+|  where (failure > 3 AND success > 0) OR count > 0
