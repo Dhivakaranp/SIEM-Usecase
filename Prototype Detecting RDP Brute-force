@@ -1,3 +1,11 @@
+Usecase Name: Detecting RDP bruteforce 
+
+Description:
+  leveraging datamodel authentication and network traffic to find rdp brute force alert, were it will provide authentication info includes user, src_ip, dest_ip, destination host name  
+
+Required data sources :
+ Datamodel: Authentication, Network_Traffic
+
 | tstats summariesonly=t allow_old_summaries=t count values("All_Traffic.action") from datamodel=Network_Traffic where All_Traffic.app="*rdp" AND All_Traffic.action= allowed 
   by All_Traffic.src All_Traffic.dest All_Traffic.user All_Traffic.dvc All_Traffic.rule All_Traffic.dest_zone  
 | rename All_Traffic.src as IpAddress 
