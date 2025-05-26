@@ -1,5 +1,6 @@
 Usecase Name: Detecting RDP bruteforce 
-
+Platform : Splunk
+cron : [0 * * * *]
 Description:
   leveraging datamodel authentication and network traffic to find rdp brute force alert, were it will provide authentication info includes user, src_ip, dest_ip, destination host name  
 
