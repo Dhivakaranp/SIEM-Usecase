@@ -1,0 +1,20 @@
+Log from this particular host is not generated
+
+
+
+| tstats latest(_time) as latest where index=* earliest=-24h by host index 
+| lookup asset asset1 as host 
+| lookup asset asset2 as host outputnew 
+| lookup asset asset3 as host outputnew 
+| fields - asset1 asset2 asset3 
+| addinfo 
+| eval impact=if(isnotnull(impact), lower(impact), "low") 
+| eval urgency=if(isnotnull(system_confidence), lower(system_confidence), "low") 
+| eval score = case( impact="low" AND urgency="low", "informational", impact="low" AND urgency="medium", "low", impact="low" AND urgency="high", "medium", impact="medium" AND urgency="low", "low", impact="medium" AND urgency="medium", "medium", impact="medium" AND urgency="high", "high", impact="high" AND urgency="low", "medium", impact="high" AND urgency="medium", "high", impact="high" AND urgency="high", "critical", impact="critical" AND urgency="low", "critical", impact="critical" AND urgency="medium", "critical", impact="critical" AND urgency="high", "critical" ) 
+| lookup network_list ip_ranges as host OUTPUT network_name 
+| eval threshold_secs = case( score=="critical", 1800, score=="high", 3600, score=="medium", 14400, score=="low", 86400, score=="informational", 259200 ) 
+| eval relativetime = now() 
+| eval recent = if(latest > (relativetime - threshold_secs), 1, 0) 
+| eval Latest_Event_Received = strftime(latest, "%c") 
+| where recent=0 
+| table score host index Latest_Event_Received system_category system_priority system_confidence urgency impact
