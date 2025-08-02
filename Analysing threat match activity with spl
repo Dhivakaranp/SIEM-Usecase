@@ -1,3 +1,7 @@
+usecase: Analysing threat match activity with spl
+objective: finding the threat activity based on the threat-intel
+dependency : threatintel (misp/opencti), firewall logs
+
 index="threat_activity" 
 | table  description	dest	dest_asset src threat_collection_key 	threat_match_field	threat_match_value	user
 |rename threat_match_value as src_ip
