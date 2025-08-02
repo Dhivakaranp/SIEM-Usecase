@@ -1,4 +1,4 @@
-## Detecting RDP bruteforce 
+Detecting RDP bruteforce 
 Platform : Splunk
 cron : [0 * * * *]
 Description:
