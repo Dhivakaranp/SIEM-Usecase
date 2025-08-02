@@ -9,3 +9,9 @@ Below, you'll find a list of use cases that I personally built and tested in Spl
 ### Use Cases:
 
 * Basic scanning
+* Create Log from this particular host is not generated
+* Analysing threat match activity with spl
+* Detecting Horizontal and vertical scanning using splunk
+* Log from this particular host is not generated
+* Prototype Detecting RDP Brute-force
+* simultaneous access to host
