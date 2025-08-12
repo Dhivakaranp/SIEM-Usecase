@@ -1,7 +1,12 @@
-Purpose: To detect scan towards internal network
+Objective: To detect scan towards internal network
 Platform : Splunk
 cron : [0 * * * *]
 Suggestion : integrating threatintel helps the Enhance Threat Detection & Improve Incident Response
+
+Description : Logic is developed to identify the scanning activity and classify the scanning activity based on the behaviour.
+
+Mitre Tactic: TA0043
+Mitre Technique: T1595 
 
 | from datamodel:Network_Traffic 
 | search dest_ip="10.0.0.0/8" OR dest_ip="172.16.0.0/11" OR dest_ip="192.168.0.0/16" # Any other IP needed to monitored
@@ -20,4 +25,3 @@ Suggestion : integrating threatintel helps the Enhance Threat Detection & Improv
 | eval Scan_Type = (case(dc_dest_port > dc_dest_ip, "Port_Scan", dc_dest_port < dc_dest_ip, "Host_Scan", (unassigned_port_count=0 AND Assigned_port_count=0 AND ms_rdp_port_count=1),"RDP_Scan")) 
 | where (dc_dest_ip > 100 OR (unassigned_port_count > 500 AND app!=incomplete)OR Assigned_port_count > 20 OR Scan_Type="RDP_Scan") AND (allowed_count > 0) 
 | convert ctime(Firsttime) ctime(Lasttime)
-
