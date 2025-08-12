@@ -3,6 +3,8 @@ Platform : Splunk
 cron : [0 * * * *]
 Description:
   leveraging datamodel authentication and network traffic to find rdp brute force alert, were it will provide authentication info includes user, src_ip, dest_ip, destination host name  
+Mitre Tactic : TA0006
+Mitre Technique : T1110 
 
 Required data sources :
  Datamodel: Authentication, Network_Traffic, ip_to_hostname.csv(lookup) [for mapping IPs to hostname ]
