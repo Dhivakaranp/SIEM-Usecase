@@ -16,22 +16,35 @@ Below, you'll find a list of use cases that I personally built and tested in Spl
 * Prototype Detecting RDP Brute-force
 * simultaneous access to host
   
-### Refinement Flow
-Refinement Flow	
-Assess the usecase	Analyse the objective and assess the usecase detection cabapility and dependencies
-Logic development 	Develop the logic and prepare the dependecies
-Test on live environement 	Test the logic in the environement for the last timeframe last 90 days 
-Deploying as test alert on realtime environment 	Monitor the performance of the alert and it's efficiency (TP, FP)
-Continious Improvement	iterate with improvement based on the observatrion 
-Make as Primary 	make the test usecase as primary by replacing the old one 
-	
-Useacase Life cycle	
-When the assessment needed 	Onboarding of new data source
-	any changes happenning in parsing 
-	
-	
-	
-Usecase assessment 	Understand the objective 
-	verify whether the logic is perfectly detecting the what is intended
-	analyse the log for the parsing or fields 
-<img width="977" height="409" alt="image" src="https://github.com/user-attachments/assets/9d66fb24-5abb-4892-8550-70fd5ff559f2" />
+* * *
+### **Refinement Flow**
+
+1. **Assess the Use Case** – Analyze the objective and evaluate the detection capability and dependencies.
+
+2. **Logic Development** – Develop the logic and define the dependencies.
+
+3. **Testing on Live Environment** – Validate the logic against the last 90 days of data.
+
+4. **Deploy as Test Alert in Real-time Environment** – Monitor the alert’s performance and efficiency (e.g., True Positives, False Positives).
+
+5. **Continuous Improvement** – Iterate and enhance the use case based on observations.
+
+6. **Make Primary** – Promote the test use case to primary by replacing the old one.
+
+* * *
+
+### **Use Case Life Cycle**
+
+* **When Assessment is Needed**
+  
+  * During onboarding of a new data source.
+  
+  * When changes occur in parsing.
+
+* **Use Case Assessment**
+  
+  * Understand the objective.
+  
+  * Verify whether the logic is accurately detecting the intended behavior.
+  
+  * Analyze logs for parsing errors or field accuracy.
